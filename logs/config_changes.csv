@@ -1,0 +1,2 @@
+timestamp,service,parameter,old_value,new_value
+2025-09-19T20:01:00Z,auth-service,DATABASE_URL,mysql://user:pass@db-v1/prod,mysql://user:pass@db-v2/prod

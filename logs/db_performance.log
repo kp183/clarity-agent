@@ -1,0 +1,5 @@
+2025-09-19T20:04:00Z INFO: Database db-v2 normal query latency: 50ms
+2025-09-19T20:06:00Z WARN: Database db-v2 average query latency increasing: 350ms
+2025-09-19T20:07:30Z WARN: Database db-v2 average query latency critical: 1200ms
+2025-09-19T20:08:00Z ERROR: Database db-v2 connection timeout.
+2025-09-19T20:08:15Z ERROR: Database db-v2 connection timeout.
