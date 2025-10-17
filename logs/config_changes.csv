@@ -1,0 +1,6 @@
+timestamp,service,action,config_key,old_value,new_value,user
+2024-10-15 14:25:00,auth-service,update,database.max_connections,20,50,admin
+2024-10-15 14:25:30,auth-service,update,database.timeout_ms,3000,5000,admin
+2024-10-15 14:26:00,api-service,update,rate_limit.requests_per_minute,1000,2000,admin
+2024-10-15 14:28:00,auth-service,restart,service_status,running,restarting,admin
+2024-10-15 14:28:30,auth-service,update,service_status,restarting,running,system

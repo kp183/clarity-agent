@@ -1,0 +1,10 @@
+2024-10-15 14:30:15 ERROR auth-service Database connection timeout after 5000ms
+2024-10-15 14:30:16 ERROR auth-service Failed to authenticate user: connection pool exhausted
+2024-10-15 14:30:17 WARN api-service High response time detected: 3500ms
+2024-10-15 14:30:18 ERROR auth-service Connection pool size exceeded: 50/50 connections in use
+2024-10-15 14:30:19 INFO user-service Processing user request for user_id=12345
+2024-10-15 14:30:20 ERROR auth-service Database query failed: timeout
+2024-10-15 14:30:21 ERROR auth-service Unable to establish database connection
+2024-10-15 14:30:22 WARN payment-service Payment processing delayed due to auth service unavailable
+2024-10-15 14:30:23 ERROR auth-service Critical: All database connections exhausted
+2024-10-15 14:30:24 FATAL auth-service Service becoming unresponsive due to connection issues

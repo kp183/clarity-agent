@@ -1,0 +1,31 @@
+[
+  {
+    "timestamp": "2024-10-15T14:20:00Z",
+    "service": "auth-service",
+    "event": "deployment_started",
+    "version": "v2.1.3",
+    "environment": "production"
+  },
+  {
+    "timestamp": "2024-10-15T14:22:00Z",
+    "service": "auth-service",
+    "event": "deployment_completed",
+    "version": "v2.1.3",
+    "status": "success"
+  },
+  {
+    "timestamp": "2024-10-15T14:23:00Z",
+    "service": "auth-service",
+    "event": "health_check",
+    "status": "healthy",
+    "response_time_ms": 150
+  },
+  {
+    "timestamp": "2024-10-15T14:29:00Z",
+    "service": "auth-service",
+    "event": "health_check",
+    "status": "unhealthy",
+    "response_time_ms": 8000,
+    "error": "database connection timeout"
+  }
+]

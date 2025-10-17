@@ -1,0 +1,10 @@
+# Python virtual environment and cache files
+venv/
+__pycache__/
+clarity_agent.egg-info/
+
+# Kiro IDE files
+.kiro/
+
+# Environment variables (if you create one)
+.env

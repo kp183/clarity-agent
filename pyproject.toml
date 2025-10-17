@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clarity-agent"
+version = "0.1.0"
+description = "AI-powered IT operations automation system with AWS Bedrock integration"
+dependencies = [
+    "boto3>=1.34.0",           # AWS SDK for Bedrock integration
+    "botocore>=1.34.0",        # AWS core library
+    "pydantic>=2.0.0",         # Data validation
+    "pydantic-settings>=2.0.0", # Settings management
+    "sqlalchemy>=2.0.0",       # Database ORM
+    "asyncpg>=0.28.0",         # PostgreSQL async driver
+    "python-dotenv>=1.0.0",    # Environment variables
+    "structlog>=23.0.0",       # Structured logging
+    "typer>=0.9.0",            # CLI interface
+    "rich>=13.0.0",            # Pretty console output
+    "aiofiles>=23.0.0",        # Async file operations
+    "httpx>=0.25.0",           # Async HTTP client
+    "fastapi>=0.104.0",        # For MCP server (alternative to fastmcp)
+    "uvicorn>=0.24.0",         # ASGI server
+    "pandas>=2.0.0",           # Data analysis and log processing
+    "requests>=2.31.0",        # HTTP requests for MCP client
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["clarity_agent*"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.12.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+clarity-agent = "clarity_agent.main:app"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
