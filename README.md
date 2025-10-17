@@ -221,4 +221,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 **Built with ❤️ for the IT Operations community**
 
-*Transforming incident response, one log at a time.*
+*Transforming incident response, one log at a time.*#   a g e n t s - c l a r i t y  
+ 
