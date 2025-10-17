@@ -1,0 +1,6 @@
+2025-09-19T21:00:00Z INFO: Database db-v2 normal query latency: 60ms
+2025-09-19T21:01:00Z INFO: Database db-v2 normal query latency: 55ms
+2025-09-19T21:02:00Z WARN: Database db-v2 average query latency increasing: 250ms
+2025-09-19T21:03:00Z WARN: Database db-v2 average query latency increasing: 400ms
+2025-09-19T21:04:00Z WARN: Database db-v2 average query latency increasing: 650ms
+2025-09-19T21:05:00Z ERROR: High number of slow queries detected on db-v2. Potential for service degradation.
