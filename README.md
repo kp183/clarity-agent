@@ -1,51 +1,55 @@
-```markdown
 # 🤖 Clarity Agent
 
-AI-powered automation for incident analysis and remediation.
+**AI-Powered IT Operations Automation for Incident Analysis and Remediation**
 
-Clarity Agent automates Root Cause Analysis (RCA) by analyzing logs, correlating events across systems, and suggesting safe, context-aware remediation actions. It combines a human-friendly CLI with AI models and an MCP-compatible tool server to shorten incident resolution from hours to minutes.
+<p align="center">
+  <img src="https://img.shields.io/badge/AWS-Bedrock-orange?style=for-the-badge" alt="AWS Bedrock"/>
+  <img src="https://img.shields.io/badge/AI_Model-Amazon_Titan-F8991D?style=for-the-badge" alt="Amazon Titan"/>
+  <img src="https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge" alt="Python 3.11+"/>
+  <img src="https://img.shields.io/badge/CLI-Rich_&_Typer-purple?style=for-the-badge" alt="Rich & Typer CLI"/>
+  <img src="https://img.shields.io/badge/Protocol-MCP-lightgrey?style=for-the-badge" alt="MCP Protocol"/>
+</p>
 
----
-
-## Key Capabilities
-
-- Intelligent log ingestion (JSON, CSV, plain text)
-- Chronological event correlation and timeline consolidation
-- AI-driven RCA with confidence scores and evidence
-- Context-aware remediation suggestions (MCP protocol)
-- Rich, structured CLI output (JSON + human-readable panels)
-- Kubernetes-aware command suggestions (kubectl-ready)
+Clarity Agent automates Root Cause Analysis (RCA) by analyzing logs, correlating events, and suggesting safe, context-aware remediation actions. It combines a human-friendly CLI with AWS Bedrock and an MCP-compatible tool server to shorten incident resolution from hours to minutes.
 
 ---
 
-## Architecture (high level)
+### ## Key Capabilities
+
+-   **🧠 AI-Driven RCA:** Utilizes **AWS Bedrock (Amazon Titan)** for high-confidence root cause analysis with supporting evidence.
+-   **🛠️ Intelligent Remediation:** Makes context-aware decisions to select the appropriate remediation tool (e.g., `restart` vs. `rollback`) from a standards-compliant **MCP server**.
+-   **🔍 Multi-Format Log Ingestion:** Natively parses and consolidates JSON, CSV, and plain text logs into a single chronological timeline.
+-   **🛡️ Resilient by Design:** Includes a robust mock analysis fallback to ensure a smooth demo and functional use even when the external AI service fails.
+-   **💎 Professional CLI Experience:** A beautiful and intuitive command-line interface powered by **Typer** and **Rich**, featuring syntax highlighting, spinners, and clean, readable panels.
+
+---
+
+### ## Architecture
 
 ```mermaid
 graph TD
-  subgraph User Interaction
-    CLI[Rich CLI]
-  end
+    subgraph User Interaction
+        CLI[👨‍💻 Rich CLI Interface]
+    end
 
-  subgraph Clarity Agent
-    Orchestrator["clarity_agent.main (Orchestrator)"]
-    Analyst["Analyst Agent (Strands)"]
-    Parser["Log Parsing Utilities"]
-  end
+    subgraph Clarity Agent Core
+        Orchestrator["main.py (Orchestrator)"]
+        Analyst["Analyst Agent"]
+    end
 
-  subgraph External
-    Bedrock["AWS Bedrock (LLM)"]
-    MCP["MCP Server (FastAPI)"]
-  end
+    subgraph External Services & Tools
+        Bedrock["AWS Bedrock (Titan Model)"]
+        MCPServer["MCP Server (FastAPI)"]
+    end
 
-  CLI -->|analyze / start-mcp| Orchestrator
-  Orchestrator --> Analyst
-  Analyst --> Parser
-  Analyst -->|prompt| Bedrock
-  Bedrock -->|analysis JSON| Analyst
-  Analyst -->|tool request| MCP
-  MCP -->|command| Analyst
-  Analyst --> Orchestrator
-  Orchestrator --> CLI
+    CLI -- "Executes 'analyze' command" --> Orchestrator
+    Orchestrator -- "Triggers" --> Analyst
+    Analyst -- "Sends prompt to" --> Bedrock
+    Bedrock -- "Returns JSON analysis" --> Analyst
+    Analyst -- "Intelligently chooses & calls tool" --> MCPServer
+    MCPServer -- "Returns command" --> Analyst
+    Analyst -- "Returns final report to" --> Orchestrator
+    Orchestrator -- "Prints beautiful report to" --> CLI
 ```
 
 ---
@@ -193,3 +197,4 @@ Thanks to AWS Bedrock, Model Context Protocol, Rich, and FastAPI for tools and i
 ---
 Built with care for modern IT Operations — precise analysis, transparent reasoning, and operator-first remediation.
 ```
+
