@@ -27,12 +27,13 @@ class AnalystAgent:
         self.goal = "Analyze incident logs to find the root cause and suggest an actionable remediation."
         logger.info("Analyst Agent initialized.")
 
-    async def run_analysis(self, log_files: List[str]) -> Tuple[Panel, Optional[Panel]]:
+    async def run_analysis(self, log_files: List[str], status=None) -> Tuple[Panel, Optional[Panel]]:
         """
         Orchestrates the full asynchronous RCA pipeline from log ingestion to final report.
 
         Args:
             log_files: A list of file paths to the incident logs.
+            status: Optional Rich status object for dynamic updates.
 
         Returns:
             A tuple containing two `rich.panel.Panel` objects for the final report.
@@ -40,28 +41,50 @@ class AnalystAgent:
         logger.info("Starting analysis pipeline...", log_files=log_files)
 
         # Step 1: Parse and consolidate all log files into a single timeline.
+        if status:
+            status.update("[bold blue]📁 Processing log files and building timeline...[/bold blue]")
+            
         try:
             timeline_df = parse_log_files(log_files)
             if timeline_df.empty:
-                error_panel = Panel("[bold red]Error: Could not parse any valid log entries from the provided files.[/bold red]", title="[bold red]Parsing Error[/bold red]", border_style="red")
+                error_panel = Panel("[bold red]❌ Error: Could not parse any valid log entries from the provided files.[/bold red]", title="[bold red]🚨 Parsing Error[/bold red]", border_style="red")
                 return error_panel, None
+                
+            num_events = len(timeline_df)
+            if status:
+                status.update(f"[bold green]✅ Successfully parsed {num_events} log events[/bold green]")
+                
         except Exception as e:
             logger.error("Fatal error during log parsing", error=str(e))
-            error_panel = Panel(f"[bold red]Fatal Error during log parsing: {e}[/bold red]", title="[bold red]Critical Error[/bold red]", border_style="red")
+            error_panel = Panel(f"[bold red]❌ Fatal Error during log parsing: {e}[/bold red]", title="[bold red]🚨 Critical Error[/bold red]", border_style="red")
             return error_panel, None
 
         # Step 2: Invoke the AWS Bedrock model to perform the core RCA.
+        if status:
+            status.update("[bold yellow]🧠 Connecting to AWS Bedrock for AI analysis...[/bold yellow]")
+            
         rca_prompt = self._build_rca_prompt(timeline_df)
         analysis_response_text = bedrock_client.invoke(rca_prompt)
 
         # Step 3: Check if the AI analysis was successful; if not, use a resilient fallback.
         if "Error:" in analysis_response_text or not self._is_valid_json(analysis_response_text):
             logger.warning("Bedrock analysis failed or returned invalid JSON. Using mock analysis as a fallback.")
+            if status:
+                status.update("[bold yellow]⚠️  Bedrock unavailable, using intelligent fallback analysis...[/bold yellow]")
             analysis_response_text = self._generate_mock_analysis(timeline_df)
+        else:
+            if status:
+                status.update("[bold green]🎯 AI analysis completed successfully[/bold green]")
         
         # Step 4: Use the AI's analysis to intelligently request a remediation command from the MCP server.
+        if status:
+            status.update("[bold cyan]🔧 Requesting remediation command from MCP server...[/bold cyan]")
+            
         logger.info("Requesting remediation command from MCP server...")
         remediation_command = await self._get_remediation_command(analysis_response_text)
+        
+        if status:
+            status.update("[bold green]🚀 Remediation command generated successfully[/bold green]")
         
         # Step 5: Format the final, polished report for display.
         logger.info("Analysis pipeline completed successfully.")
@@ -152,30 +175,95 @@ Your response must be ONLY the JSON object based on your analysis."""
         return False
 
     def _format_report(self, analysis_str: str, remediation_command: str) -> Tuple[Panel, Panel]:
-        """Creates professional `rich` panels for the final console output."""
-        pretty_analysis = analysis_str
-        try:
-            json_match = re.search(r'\{.*\}', analysis_str, re.DOTALL)
-            if json_match:
-                pretty_analysis = json.dumps(json.loads(json_match.group(0)), indent=2)
-            else:
-                pretty_analysis = "Could not parse a valid JSON object from the AI's response."
-        except (json.JSONDecodeError, AttributeError):
-            logger.warning("Could not parse JSON from AI response, displaying raw text.")
-            pretty_analysis = analysis_str
-
+        """Creates professional `rich` panels for the final console output with enhanced JSON parsing."""
+        
+        # Enhanced JSON extraction with multiple fallback strategies
+        pretty_analysis = self._extract_and_format_json_robust(analysis_str)
+        
+        # Create beautifully formatted panels with enhanced styling
         report_panel = Panel(
-            Syntax(pretty_analysis, "json", theme="solarized-dark", line_numbers=True),
-            title="[bold green]AI Root Cause Analysis (from AWS Bedrock)[/bold green]",
+            Syntax(pretty_analysis, "json", theme="monokai", line_numbers=True, word_wrap=True),
+            title="[bold green]🧠 AI Root Cause Analysis[/bold green] [dim](AWS Bedrock Claude 3 Sonnet)[/dim]",
+            subtitle="[dim]Confidence-scored incident analysis with supporting evidence[/dim]",
             border_style="green",
             expand=True,
+            padding=(1, 2)
         )
         
         remediation_panel = Panel(
-            Syntax(str(remediation_command), "shell", theme="solarized-dark"),
-            title="[bold yellow]AI Suggested Remediation (from MCP Server)[/bold yellow]",
-            border_style="yellow",
+            Syntax(str(remediation_command), "bash", theme="monokai", word_wrap=True),
+            title="[bold yellow]🔧 AI Suggested Remediation[/bold yellow] [dim](MCP Server)[/dim]",
+            subtitle="[dim]Context-aware remediation command ready for execution[/dim]",
+            border_style="yellow", 
             expand=True,
+            padding=(1, 2)
         )
         
         return report_panel, remediation_panel
+
+    def _extract_and_format_json_robust(self, analysis_str: str) -> str:
+        """
+        Enhanced JSON extraction with multiple parsing strategies to handle various AI response formats.
+        
+        This method tries several approaches to extract valid JSON from AI responses that might
+        include extra text, markdown formatting, or other wrapper content.
+        """
+        
+        # Strategy 1: Look for JSON within markdown code blocks
+        markdown_json_pattern = r'```(?:json)?\s*(\{.*?\})\s*```'
+        markdown_match = re.search(markdown_json_pattern, analysis_str, re.DOTALL | re.IGNORECASE)
+        if markdown_match:
+            try:
+                json_obj = json.loads(markdown_match.group(1))
+                return json.dumps(json_obj, indent=2, ensure_ascii=False)
+            except json.JSONDecodeError:
+                pass
+        
+        # Strategy 2: Find the outermost complete JSON object (handles nested braces)
+        brace_count = 0
+        start_idx = -1
+        end_idx = -1
+        
+        for i, char in enumerate(analysis_str):
+            if char == '{':
+                if brace_count == 0:
+                    start_idx = i
+                brace_count += 1
+            elif char == '}':
+                brace_count -= 1
+                if brace_count == 0 and start_idx != -1:
+                    end_idx = i
+                    break
+        
+        if start_idx != -1 and end_idx != -1:
+            try:
+                json_str = analysis_str[start_idx:end_idx + 1]
+                json_obj = json.loads(json_str)
+                return json.dumps(json_obj, indent=2, ensure_ascii=False)
+            except json.JSONDecodeError:
+                pass
+        
+        # Strategy 3: Simple regex fallback for basic JSON objects
+        simple_json_pattern = r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}'
+        simple_match = re.search(simple_json_pattern, analysis_str, re.DOTALL)
+        if simple_match:
+            try:
+                json_obj = json.loads(simple_match.group(0))
+                return json.dumps(json_obj, indent=2, ensure_ascii=False)
+            except json.JSONDecodeError:
+                pass
+        
+        # Strategy 4: Try to parse the entire string as JSON (in case it's clean)
+        try:
+            json_obj = json.loads(analysis_str.strip())
+            return json.dumps(json_obj, indent=2, ensure_ascii=False)
+        except json.JSONDecodeError:
+            pass
+        
+        # Strategy 5: If all else fails, return a formatted error message with the original content
+        logger.warning("Could not extract valid JSON from AI response using any strategy")
+        return json.dumps({
+            "error": "Could not parse JSON from AI response",
+            "raw_response": analysis_str[:500] + "..." if len(analysis_str) > 500 else analysis_str,
+            "note": "This may indicate an issue with the AI model response format"
+        }, indent=2)

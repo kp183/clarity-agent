@@ -40,26 +40,28 @@ def analyze(
     """Runs the reactive incident analysis using the Analyst Agent."""
     
     async def run_async_analysis():
-        # This implementation with a status spinner is excellent and provides a great UX.
-        with console.status("[bold green]Running Clarity Agent analysis...[/bold green]", spinner="dots") as status:
+        with console.status("[bold blue]🚀 Initializing Clarity Agent...[/bold blue]", spinner="dots") as status:
             
-            status.update("Initializing Analyst Agent...")
+            status.update("[bold blue]📊 Parsing and consolidating log files...[/bold blue]")
             agent = AnalystAgent()
             
-            # The agent correctly returns a tuple of two 'rich' Panel objects
-            report_panel, remediation_panel = await agent.run_analysis(log_files)
+            # Pass the status object to the agent for dynamic updates
+            report_panel, remediation_panel = await agent.run_analysis(log_files, status)
             
-            status.update("Formatting final report...")
+            status.update("[bold green]✨ Finalizing analysis report...[/bold green]")
             
-        console.print("\n--- [bold green]Analysis Complete[/bold green] ---")
+        console.print("\n")
+        console.print("🎯 [bold green]Analysis Complete[/bold green] 🎯")
+        console.print()
         
-        # This correctly prints each panel for proper formatting
+        # Display the professional panels
         if report_panel:
             console.print(report_panel)
+            console.print()
         if remediation_panel:
             console.print(remediation_panel)
 
-    # Use asyncio.run() to execute our async top-level function. This is correct.
+    # Use asyncio.run() to execute our async top-level function
     asyncio.run(run_async_analysis())
 
 # --- Application Entry Point (Correct) ---
