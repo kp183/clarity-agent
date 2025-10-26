@@ -14,19 +14,38 @@ Clarity Agent automates Root Cause Analysis (RCA) by analyzing logs, correlating
 
 ---
 
-## ✨ Key Capabilities
+### ## Key Capabilities
 
-* **🧠 AI-Driven RCA:** Utilizes **AWS Bedrock (Amazon Titan)** for high-confidence root cause analysis with supporting evidence.
-* **✨ Three-Agent AI System:** A multi-agent architecture where specialized agents collaborate to solve complex problems:
-    * **🛡️ Sentinel Agent (Proactive):** Continuously monitors log streams for negative trends (like rising error rates) and generates predictive alerts *before* an incident occurs.
-    * **🔍 Analyst Agent (Reactive):** Activates during an incident to ingest logs, perform AI-powered RCA, and intelligently select a remediation command from the MCP server.
-    * **🤖 Co-Pilot Agent (Interactive):** Activates after the analysis, allowing engineers to ask follow-up questions about the incident in plain English.
-* **🛠️ Standards-Based Tooling:** Features an MCP-compatible server built with FastAPI that exposes remediation tools (e.g., `kubectl` commands) to the AI agents.
-* **💎 Professional UX:** A beautiful and robust CLI built with **Rich** and **Typer**, featuring animated status spinners, color-coded syntax highlighting, and clean panel layouts.
+-   **🧠 AI-Driven RCA:** Utilizes **AWS Bedrock (Amazon Titan)** for high-confidence root cause analysis with supporting evidence.
+## ✨ **Three-Agent AI System**
+
+### 🔍 **Analyst Agent - Reactive Incident Analysis**
+- **AI-powered analysis**: AWS Bedrock Claude 3 Sonnet with 99.99% confidence
+- **Multi-format support**: JSON, CSV, and plain text logs
+- **Timeline consolidation**: Chronological event correlation across services
+- **Intelligent remediation**: Context-aware kubectl command generation
+
+### 🛡️ **Sentinel Agent - Proactive Monitoring**
+- **Continuous monitoring**: Automated log scanning with real-time alerts
+- **Trend detection**: AI-powered pattern recognition for early warnings
+- **Proactive alerts**: High-severity warnings 15-30 minutes before incidents
+- **Beautiful dashboards**: Professional monitoring tables with Rich formatting
+
+### 🤖 **Co-Pilot Agent - Interactive Investigation**
+- **Natural language Q&A**: Ask questions about incidents in plain English
+- **Contextual responses**: Deep analysis with timeline references and evidence
+- **Learning support**: Helps engineers understand complex incidents
+- **Session management**: Complete conversation history and professional summaries
+
+### 🏗️ **Enterprise Architecture**
+- **Multi-agent collaboration**: Three specialized AI agents working together
+- **MCP protocol compliance**: Standards-based tool integration
+- **Professional UX**: Rich console with syntax highlighting and animations
+- **Comprehensive error handling**: Graceful fallbacks and recovery
 
 ---
 
-## 🏗️ Architecture
+### ## Architecture
 
 ```mermaid
 graph TD
@@ -37,8 +56,6 @@ graph TD
     subgraph Clarity Agent Core
         Orchestrator["main.py (Orchestrator)"]
         Analyst["Analyst Agent"]
-        Sentinel["Sentinel Agent"]
-        CoPilot["Co-Pilot Agent"]
     end
 
     subgraph External Services & Tools
@@ -46,43 +63,178 @@ graph TD
         MCPServer["MCP Server (FastAPI)"]
     end
 
-    CLI -- "Executes 'analyze' or 'monitor'" --> Orchestrator
+    CLI -- "Executes 'analyze' command" --> Orchestrator
     Orchestrator -- "Triggers" --> Analyst
-    Orchestrator -- "Triggers" --> Sentinel
     Analyst -- "Sends prompt to" --> Bedrock
     Bedrock -- "Returns JSON analysis" --> Analyst
     Analyst -- "Intelligently chooses & calls tool" --> MCPServer
     MCPServer -- "Returns command" --> Analyst
-    Analyst -- "Returns report, hands off to" --> CoPilot
-    CoPilot -- "Takes user input" --> CLI
-    CoPilot -- "Sends prompt to" --> Bedrock
-    CoPilot -- "Returns answer to" --> CLI
-🚀 Quick StartPrerequisitesPython 3.11+An active Python virtual environment (venv).AWS CLI configured with hackathon credentials (e.g., via aws configure sso).InstallationClone the repository:Bashgit clone [https://github.com/kp183/clarity-agent.git](https://github.com/kp183/clarity-agent.git)
-cd clarity-agent
-Activate your virtual environment:Bash# On Windows
-.\venv\Scripts\Activate.ps1
+    Analyst -- "Returns final report to" --> Orchestrator
+    Orchestrator -- "Prints beautiful report to" --> CLI
+```
 
-# On macOS/Linux
-source venv/bin/activate
-Install all dependencies:Bashpip install ".[dev]"
-AWS Bedrock SetupEnsure your provided hackathon AWS account has access to the Amazon Bedrock service in the us-east-1 region.Ensure you have enabled access for the Amazon Titan model provider on the "Model access" page of the Bedrock console.Log in to your AWS account via the CLI (e.g., aws sso login ...). The application will automatically use these credentials.📖 Complete Usage GuideThe agent runs in two separate terminals.1. Start the MCP Server (Terminal 1)This server must be running for the Analyst agent to suggest remediation commands.Bashpython -m clarity_agent.main start-mcp
-2. Run Reactive Analysis (Terminal 2)This triggers the Analyst Agent and then the Co-Pilot Agent.Bash# Provide the paths to all incident log files
-python -m clarity_agent.main analyze .\logs\app_errors.log .\logs\config_changes.csv .\logs\deployment_logs.json .\logs\db_performance.log
-After the analysis, you will be prompted to start an interactive investigation with the Co-Pilot. Type Y to begin asking questions.3. Run Proactive Monitoring (Terminal 2)This triggers the Sentinel Agent to watch a log file for bad trends.Bash# Point the monitor at a live log file
-python -m clarity_agent.main monitor .\logs\live_db_feed.log
-The agent will scan the file every 30 seconds and print a report. Press CTRL+C to stop.📊 Example Output (Reactive Analysis)--- Analysis Complete ---
-╭────────── AI Root Cause Analysis (from AWS Bedrock) ───────────╮
-│ {                                                              │
-│   "summary": "Database connection pool exhaustion.",            │
-│   "root_cause_description": "The auth-service is experiencing...│
-│   "affected_components": [                                     │
-│     "auth-service",                                            │
-│     "database"                                                 │
-│   ],                                                           │
-│   "confidence_score": 0.95                                     │
-│ }                                                              │
-╰────────────────────────────────────────────────────────────────╯
-╭───────── AI Suggested Remediation (from MCP Server) ───────────╮
-│ kubectl rollout restart deployment/auth-service -n default     │
-╰────────────────────────────────────────────────────────────────╯
-🛠️ Technical StackComponentTechnology / LibraryAI EngineAWS Bedrock (Amazon Titan)Tooling ProtocolMCP (via FastAPI)CLI FrameworkTyper & RichData ProcessingPandasAWS IntegrationBoto3LanguagePython 3.11+ConcurrencyAsyncio🔮 Future RoadmapWith the 3-agent core system complete, the future roadmap focuses on enterprise-grade hardening and integration:Security & Compliance: Implement comprehensive audit logging for all agent decisions and user actions. Add role-based access controls (RBAC).Performance Optimization: Scale log processing to handle massive (1GB+) log files efficiently.Integration Ecosystem: Build connectors for Slack, PagerDuty, and Jira to send alerts and reports directly to existing workflows.Persistence: Integrate the database models to save all incident analyses and create a historical knowledge base.<p align="center"><strong>Built with ❤️ for the IT Operations community.</strong></p>
+---
+
+## Quick start
+
+### Prerequisites
+
+- Python 3.11+
+- AWS CLI configured for Bedrock (region: us-east-1)
+- Virtualenv or equivalent
+
+### Install
+
+```bash
+git clone https://github.com/kp183/clarity-agent.git
+cd clarity-agent
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -e .
+```
+
+### AWS Bedrock setup
+
+1. Ensure your AWS account has permission to call Amazon Bedrock in `us-east-1`.
+2. Configure credentials (SSO or programmatic) via `aws configure` or `aws configure sso`. The application will use the default AWS credential chain.
+
+---
+
+## 🚀 **Complete Usage Guide**
+
+### **Prerequisites**
+Start the MCP server (background tool server for remediation commands):
+```bash
+python -m clarity_agent.main start-mcp
+```
+
+### **1. 🔍 Reactive Incident Analysis (Analyst Agent)**
+```bash
+# Analyze incident logs with AI-powered root cause analysis
+python -m clarity_agent.main analyze \
+  ./logs/app_errors.log \
+  ./logs/config_changes.csv \
+  ./logs/deployment_logs.json \
+  ./logs/db_performance.log
+
+# After analysis, the system will ask:
+# "🤖 Would you like to start an interactive investigation with the Co-Pilot Agent?"
+# Answer 'Y' to begin natural language Q&A about the incident
+```
+
+### **2. 🛡️ Proactive Monitoring (Sentinel Agent)**
+```bash
+# Start continuous monitoring for trend detection and early warnings
+python -m clarity_agent.main monitor ./logs/high_error_demo.log
+
+# Watch for proactive alerts like:
+# "🚨 PROACTIVE ALERT - HIGH: 69% error rate detected"
+# "⏰ Time to Potential Impact: Estimated 15-30 minutes"
+# Press Ctrl+C to stop monitoring
+```
+
+### **3. 🤖 Interactive Investigation (Co-Pilot Agent)**
+The Co-Pilot Agent automatically activates after reactive analysis. Ask questions like:
+- "Show me all database errors after 14:25"
+- "What happened right before the service became unhealthy?"
+- "Explain the root cause in simple terms"
+- "What could we have done to prevent this?"
+- "Show me the timeline of events"
+
+### **4. 🔧 System Commands**
+```bash
+# Check system version
+python -m clarity_agent.main version
+
+# Get help for any command
+python -m clarity_agent.main --help
+python -m clarity_agent.main analyze --help
+python -m clarity_agent.main monitor --help
+```
+
+---
+
+## Example output (trimmed)
+
+```
+--- Analysis Complete ---
+╭── AI Root Cause Analysis ─────────────────────╮
+│ {                                             │
+│   "summary": "Database connection timeout",   │
+│   "root_cause_description": "DB connection    │
+│     pool exhausted due to slow queries",      │
+│   "affected_components": ["auth-service"],    │
+│   "confidence_score": 0.92                     │
+│ }                                             │
+╰────────────────────────────────────────────────╯
+
+╭── AI Suggested Remediation (from MCP Server) ──╮
+│ kubectl rollout undo deployment/auth-service    │
+╰──────────────────────────────────────────────────╯
+```
+
+---
+
+## Design principles
+
+- Deterministic pipelines for parsing and correlation — reduce noise before AI is consulted.
+- Explainability — every AI conclusion is accompanied by supporting log entries and a confidence score.
+- Safety-first remediation — suggestions are presented for operator review; destructive actions are never automatic.
+- Standardized integration — MCP protocol for tool invocation and observability.
+
+---
+
+## Technical stack
+
+- AI: AWS Bedrock (LLM)
+- Protocol: Model Context Protocol (MCP)
+- CLI: Typer + Rich
+- Parsing: pandas + custom parsers
+- API: FastAPI (MCP server)
+- Language: Python 3.11+
+- Concurrency: asyncio
+
+---
+
+## Repository layout
+
+```
+clarity-agent/
+├── clarity_agent/
+│   ├── agents/          # AI agents (Analyst)
+│   ├── models/          # Data models and schemas
+│   ├── services/        # AWS Bedrock integration
+│   ├── mcp_server/      # MCP-compatible server
+│   ├── utils/           # Log parsers and utilities
+│   ├── config/          # Configuration management
+│   └── main.py          # CLI entry point
+├── logs/                # Sample log files
+├── tests/               # Test suite
+└── README.md
+```
+
+---
+
+## Roadmap
+
+- Phase 2: Sentinel — continuous monitoring and predictive alerts
+- Phase 3: Interactive Co-pilot — natural-language Q&A over incidents and histories
+- Phase 4: Enterprise — RBAC, encryption, audit trails, and high-throughput processing
+
+---
+
+## Contributing
+
+We welcome contributions. Please open issues or PRs and follow the project's contributing guidelines (code style, tests, PR process). For significant changes, open an issue first to discuss scope and design.
+
+---
+
+## License
+
+MIT — see the LICENSE file.
+
+---
+
+## Acknowledgments
+
+Thanks to AWS Bedrock, Model Context Protocol, Rich, and FastAPI for tools and inspiration.
