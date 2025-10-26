@@ -56,6 +56,8 @@ graph TD
     subgraph Clarity Agent Core
         Orchestrator["main.py (Orchestrator)"]
         Analyst["Analyst Agent"]
+        Sentinel["Sentinel Agent"]
+        CoPilot["Co-Pilot Agent"]
     end
 
     subgraph External Services & Tools
@@ -63,16 +65,17 @@ graph TD
         MCPServer["MCP Server (FastAPI)"]
     end
 
-    CLI -- "Executes 'analyze' command" --> Orchestrator
+    CLI -- "Executes 'analyze' or 'monitor'" --> Orchestrator
     Orchestrator -- "Triggers" --> Analyst
+    Orchestrator -- "Triggers" --> Sentinel
     Analyst -- "Sends prompt to" --> Bedrock
     Bedrock -- "Returns JSON analysis" --> Analyst
     Analyst -- "Intelligently chooses & calls tool" --> MCPServer
     MCPServer -- "Returns command" --> Analyst
-    Analyst -- "Returns final report to" --> Orchestrator
-    Orchestrator -- "Prints beautiful report to" --> CLI
-```
-
+    Analyst -- "Returns report, hands off to" --> CoPilot
+    CoPilot -- "Takes user input" --> CLI
+    CoPilot -- "Sends prompt to" --> Bedrock
+    CoPilot -- "Returns answer to" --> CLI
 ---
 
 ## Quick start
