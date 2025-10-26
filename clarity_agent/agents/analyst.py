@@ -3,7 +3,7 @@ import asyncio
 import pandas as pd
 import json
 import re
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict, Any
 
 # Imports for professional formatting from the rich library
 from rich.panel import Panel
@@ -13,6 +13,7 @@ from rich.syntax import Syntax
 from ..utils.parsers import parse_log_files
 from ..services.bedrock import bedrock_client
 from ..config.settings import settings
+from ..models.core import LogLevel
 from ..utils.logging import logger
 
 class AnalystAgent:
@@ -25,6 +26,7 @@ class AnalystAgent:
         """Initializes the Analyst Agent with its role and goal."""
         self.role = "Expert Site Reliability Engineer specializing in automated incident analysis"
         self.goal = "Analyze incident logs to find the root cause and suggest an actionable remediation."
+        self.last_analysis_data = None  # Store data for Co-Pilot integration
         logger.info("Analyst Agent initialized.")
 
     async def run_analysis(self, log_files: List[str], status=None) -> Tuple[Panel, Optional[Panel]]:
@@ -88,6 +90,15 @@ class AnalystAgent:
         
         # Step 5: Format the final, polished report for display.
         logger.info("Analysis pipeline completed successfully.")
+        
+        # Store data for potential Co-Pilot session
+        self.last_analysis_data = {
+            "timeline_df": timeline_df,
+            "analysis_result": analysis_response_text,
+            "remediation_command": remediation_command,
+            "log_files": log_files
+        }
+        
         return self._format_report(analysis_response_text, remediation_command)
 
     async def _get_remediation_command(self, analysis_json_str: str) -> str:
@@ -267,3 +278,21 @@ Your response must be ONLY the JSON object based on your analysis."""
             "raw_response": analysis_str[:500] + "..." if len(analysis_str) > 500 else analysis_str,
             "note": "This may indicate an issue with the AI model response format"
         }, indent=2)
+
+    def get_analysis_data_for_copilot(self) -> Optional[Dict[str, Any]]:
+        """Get the last analysis data for Co-Pilot integration."""
+        if not self.last_analysis_data:
+            return None
+        
+        # Convert DataFrame to list of dictionaries for Co-Pilot
+        timeline_data = []
+        if 'timeline_df' in self.last_analysis_data:
+            df = self.last_analysis_data['timeline_df']
+            timeline_data = df.to_dict('records')
+        
+        return {
+            "timeline_data": timeline_data,
+            "analysis_result": self.last_analysis_data.get('analysis_result', ''),
+            "remediation_command": self.last_analysis_data.get('remediation_command', ''),
+            "log_files": self.last_analysis_data.get('log_files', [])
+        }

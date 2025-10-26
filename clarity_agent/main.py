@@ -9,6 +9,8 @@ from typing import List
 from .mcp_server.server import start_mcp_server
 from .utils.logging import logger
 from .agents.analyst import AnalystAgent
+from .agents.sentinel import SentinelAgent
+from .agents.copilot import CoPilotAgent
 
 # --- Initialization (Correct) ---
 app = typer.Typer()
@@ -60,9 +62,53 @@ def analyze(
             console.print()
         if remediation_panel:
             console.print(remediation_panel)
+            console.print()
+        
+        # Offer Co-Pilot interactive session
+        from rich.prompt import Confirm
+        if Confirm.ask("[bold cyan]🤖 Would you like to start an interactive investigation with the Co-Pilot Agent?[/bold cyan]"):
+            console.print()
+            
+            # Get analysis data for Co-Pilot
+            copilot_data = agent.get_analysis_data_for_copilot()
+            if copilot_data:
+                copilot = CoPilotAgent()
+                copilot.start_interactive_session(
+                    incident_data={"log_files": log_files},
+                    timeline_data=copilot_data["timeline_data"],
+                    analysis_result=copilot_data["analysis_result"]
+                )
+            else:
+                console.print("[red]No analysis data available for Co-Pilot session.[/red]")
 
     # Use asyncio.run() to execute our async top-level function
     asyncio.run(run_async_analysis())
+
+@app.command()
+def monitor(
+    log_files: Annotated[List[str], typer.Argument(help="A list of log file paths to monitor for trends.")]
+):
+    """Starts proactive monitoring using the Sentinel Agent to detect trends before they become incidents."""
+    
+    async def run_async_monitoring():
+        with console.status("[bold green]🛡️ Initializing Sentinel Agent for proactive monitoring...[/bold green]", spinner="dots") as status:
+            
+            status.update("[bold blue]🔧 Setting up monitoring infrastructure...[/bold blue]")
+            sentinel = SentinelAgent()
+            
+            console.print("\n")
+            console.print("🛡️ [bold green]Sentinel Agent Activated[/bold green] 🛡️")
+            console.print("[dim]Press Ctrl+C to stop monitoring[/dim]")
+            console.print()
+            
+            # Start monitoring (this will run until interrupted)
+            await sentinel.start_monitoring(log_files, status)
+            
+        console.print("\n")
+        console.print("🛑 [bold yellow]Proactive Monitoring Stopped[/bold yellow]")
+
+    # Use asyncio.run() to execute our async monitoring function
+    asyncio.run(run_async_monitoring())
 
 # --- Application Entry Point (Correct) ---
 if __name__ == "__main__":

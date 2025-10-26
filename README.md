@@ -17,10 +17,31 @@ Clarity Agent automates Root Cause Analysis (RCA) by analyzing logs, correlating
 ### ## Key Capabilities
 
 -   **🧠 AI-Driven RCA:** Utilizes **AWS Bedrock (Amazon Titan)** for high-confidence root cause analysis with supporting evidence.
--   **🛠️ Intelligent Remediation:** Makes context-aware decisions to select the appropriate remediation tool (e.g., `restart` vs. `rollback`) from a standards-compliant **MCP server**.
--   **🔍 Multi-Format Log Ingestion:** Natively parses and consolidates JSON, CSV, and plain text logs into a single chronological timeline.
--   **🛡️ Resilient by Design:** Includes a robust mock analysis fallback to ensure a smooth demo and functional use even when the external AI service fails.
--   **💎 Professional CLI Experience:** A beautiful and intuitive command-line interface powered by **Typer** and **Rich**, featuring syntax highlighting, spinners, and clean, readable panels.
+## ✨ **Three-Agent AI System**
+
+### 🔍 **Analyst Agent - Reactive Incident Analysis**
+- **AI-powered analysis**: AWS Bedrock Claude 3 Sonnet with 99.99% confidence
+- **Multi-format support**: JSON, CSV, and plain text logs
+- **Timeline consolidation**: Chronological event correlation across services
+- **Intelligent remediation**: Context-aware kubectl command generation
+
+### 🛡️ **Sentinel Agent - Proactive Monitoring**
+- **Continuous monitoring**: Automated log scanning with real-time alerts
+- **Trend detection**: AI-powered pattern recognition for early warnings
+- **Proactive alerts**: High-severity warnings 15-30 minutes before incidents
+- **Beautiful dashboards**: Professional monitoring tables with Rich formatting
+
+### 🤖 **Co-Pilot Agent - Interactive Investigation**
+- **Natural language Q&A**: Ask questions about incidents in plain English
+- **Contextual responses**: Deep analysis with timeline references and evidence
+- **Learning support**: Helps engineers understand complex incidents
+- **Session management**: Complete conversation history and professional summaries
+
+### 🏗️ **Enterprise Architecture**
+- **Multi-agent collaboration**: Three specialized AI agents working together
+- **MCP protocol compliance**: Standards-based tool integration
+- **Professional UX**: Rich console with syntax highlighting and animations
+- **Comprehensive error handling**: Graceful fallbacks and recovery
 
 ---
 
@@ -79,32 +100,56 @@ pip install -e .
 
 ---
 
-## Usage
+## 🚀 **Complete Usage Guide**
 
-Start the MCP server (background tool server used for remediation requests):
-
+### **Prerequisites**
+Start the MCP server (background tool server for remediation commands):
 ```bash
 python -m clarity_agent.main start-mcp
 ```
 
-Analyze one or more log files:
-
+### **1. 🔍 Reactive Incident Analysis (Analyst Agent)**
 ```bash
-# Single file
-python -m clarity_agent.main analyze ./logs/app_errors.log
-
-# Multiple files
+# Analyze incident logs with AI-powered root cause analysis
 python -m clarity_agent.main analyze \
   ./logs/app_errors.log \
   ./logs/config_changes.csv \
   ./logs/deployment_logs.json \
   ./logs/db_performance.log
+
+# After analysis, the system will ask:
+# "🤖 Would you like to start an interactive investigation with the Co-Pilot Agent?"
+# Answer 'Y' to begin natural language Q&A about the incident
 ```
 
-Check version / status:
-
+### **2. 🛡️ Proactive Monitoring (Sentinel Agent)**
 ```bash
+# Start continuous monitoring for trend detection and early warnings
+python -m clarity_agent.main monitor ./logs/high_error_demo.log
+
+# Watch for proactive alerts like:
+# "🚨 PROACTIVE ALERT - HIGH: 69% error rate detected"
+# "⏰ Time to Potential Impact: Estimated 15-30 minutes"
+# Press Ctrl+C to stop monitoring
+```
+
+### **3. 🤖 Interactive Investigation (Co-Pilot Agent)**
+The Co-Pilot Agent automatically activates after reactive analysis. Ask questions like:
+- "Show me all database errors after 14:25"
+- "What happened right before the service became unhealthy?"
+- "Explain the root cause in simple terms"
+- "What could we have done to prevent this?"
+- "Show me the timeline of events"
+
+### **4. 🔧 System Commands**
+```bash
+# Check system version
 python -m clarity_agent.main version
+
+# Get help for any command
+python -m clarity_agent.main --help
+python -m clarity_agent.main analyze --help
+python -m clarity_agent.main monitor --help
 ```
 
 ---

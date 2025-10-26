@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     max_tokens: int = 4096
     temperature: float = 0.5  # Lower temperature for more factual, less creative responses
     top_p: float = 0.9        # Standard value for nucleus sampling
+    
+    # --- Monitoring Configuration ---
+    # Configuration for the Sentinel Agent proactive monitoring
+    monitoring_interval_minutes: int = 1  # Fast interval for demo purposes
+    alert_threshold_error_rate: float = 0.15  # Trigger alerts when error rate exceeds 15%
 
     class Config:
         # Specifies that settings can be loaded from a .env file

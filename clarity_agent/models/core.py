@@ -12,6 +12,19 @@ class LogLevel(str, Enum):
     ERROR = "error"
     FATAL = "fatal"
 
+class TrendType(str, Enum):
+    INCREASING_ERRORS = "increasing_errors"
+    RISING_LATENCY = "rising_latency"
+    MEMORY_LEAK = "memory_leak"
+    DISK_USAGE_GROWTH = "disk_usage_growth"
+    CONNECTION_POOL_EXHAUSTION = "connection_pool_exhaustion"
+
+class AlertSeverity(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
 # --- AWS-Specific Models ---
 class AWSResourceInfo(BaseModel):
     """Represents a tagged AWS resource."""
