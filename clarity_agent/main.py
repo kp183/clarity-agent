@@ -21,12 +21,12 @@ console = Console()
 
 # --- Helper Functions ---
 
-async def _run_analysis_workflow(log_files: List[str]) -> Tuple[Optional[Panel], Optional[Panel], str, str]:
+async def _run_analysis_workflow(log_files: List[str]) -> Tuple[Optional[Panel], Optional[Panel], str, str, AnalystAgent]:
     """
     Reusable analysis workflow that returns analysis results for both analyze and ticket commands.
     
     Returns:
-        Tuple of (report_panel, remediation_panel, analysis_str, remediation_command)
+        Tuple of (report_panel, remediation_panel, analysis_str, remediation_command, agent)
     """
     with console.status("[bold blue]🚀 Initializing Clarity Agent...[/bold blue]", spinner="dots") as status:
         
@@ -43,7 +43,7 @@ async def _run_analysis_workflow(log_files: List[str]) -> Tuple[Optional[Panel],
         analysis_str = copilot_data.get("analysis_result", "") if copilot_data else ""
         remediation_command = copilot_data.get("remediation_command", "") if copilot_data else ""
         
-    return report_panel, remediation_panel, analysis_str, remediation_command
+    return report_panel, remediation_panel, analysis_str, remediation_command, agent
 
 def _format_for_ticketing(analysis_str: str, remediation_command: str) -> str:
     """
@@ -130,8 +130,16 @@ def analyze(
     """Runs the reactive incident analysis using the Analyst Agent."""
     
     async def run_async_analysis():
-        # Use the new reusable workflow function
-        report_panel, remediation_panel, analysis_str, remediation_command = await _run_analysis_workflow(log_files)
+        # Use the new reusable workflow function - but we need to get the agent instance back
+        with console.status("[bold blue]🚀 Initializing Clarity Agent...[/bold blue]", spinner="dots") as status:
+            
+            status.update("[bold blue]📊 Parsing and consolidating log files...[/bold blue]")
+            agent = AnalystAgent()
+            
+            # Pass the status object to the agent for dynamic updates
+            report_panel, remediation_panel = await agent.run_analysis(log_files, status)
+            
+            status.update("[bold green]✨ Finalizing analysis report...[/bold green]")
         
         console.print("\n")
         console.print("🎯 [bold green]Analysis Complete[/bold green] 🎯")
@@ -150,8 +158,7 @@ def analyze(
         if Confirm.ask("[bold cyan]🤖 Would you like to start an interactive investigation with the Co-Pilot Agent?[/bold cyan]"):
             console.print()
             
-            # Create a new agent instance to get Co-Pilot data
-            agent = AnalystAgent()
+            # Use the same agent instance that ran the analysis
             copilot_data = agent.get_analysis_data_for_copilot()
             if copilot_data:
                 copilot = CoPilotAgent()
@@ -174,7 +181,7 @@ def ticket(
     
     async def run_async_ticket_generation():
         # Use the reusable workflow function
-        report_panel, remediation_panel, analysis_str, remediation_command = await _run_analysis_workflow(log_files)
+        report_panel, remediation_panel, analysis_str, remediation_command, agent = await _run_analysis_workflow(log_files)
         
         console.print("\n")
         console.print("🎯 [bold green]Analysis Complete[/bold green] 🎯")
