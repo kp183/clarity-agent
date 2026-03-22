@@ -1,0 +1,1 @@
+{"name": "Memory Leak Detection", "description": "Gradual memory growth leads to OOM and service restart", "severity": "critical", "events_count": 80, "services": ["payment-service", "cache"], "root_cause": "Memory leak in payment processing loop causing heap exhaustion", "remediation": "kubectl rollout restart deployment/payment-service"}

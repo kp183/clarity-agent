@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  clarity-mcp:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - MCP_SERVER_HOST=0.0.0.0
+      - MCP_SERVER_PORT=8001
+      - AWS_PROFILE_NAME=${AWS_PROFILE_NAME:-default}
+      - AWS_REGION_NAME=${AWS_REGION_NAME:-us-east-1}
+      - BEDROCK_MODEL_ID=${BEDROCK_MODEL_ID:-amazon.titan-text-express-v1}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///clarity.db}
+    volumes:
+      - ~/.aws:/root/.aws:ro
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - clarity-net
+
+  clarity-api:
+    build: .
+    command: ["python", "-m", "uvicorn", "clarity.api.server:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    environment:
+      - MCP_SERVER_HOST=clarity-mcp
+      - MCP_SERVER_PORT=8001
+      - AWS_PROFILE_NAME=${AWS_PROFILE_NAME:-default}
+      - AWS_REGION_NAME=${AWS_REGION_NAME:-us-east-1}
+      - BEDROCK_MODEL_ID=${BEDROCK_MODEL_ID:-amazon.titan-text-express-v1}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///clarity.db}
+    volumes:
+      - ~/.aws:/root/.aws:ro
+      - ./logs:/app/logs
+      - ./demo_data:/app/demo_data
+    depends_on:
+      - clarity-mcp
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - clarity-net
+
+  clarity-web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - clarity-api
+    restart: unless-stopped
+    networks:
+      - clarity-net
+
+networks:
+  clarity-net:
+    driver: bridge

@@ -1,0 +1,1 @@
+{"name": "Database Connection Pool Exhaustion", "description": "Sudden traffic spike overwhelms database connection pool", "severity": "high", "events_count": 80, "services": ["auth-service", "database", "api-gateway"], "root_cause": "Database connection pool exhausted due to traffic spike", "remediation": "kubectl set env deployment/database MAX_CONNECTIONS=200"}

@@ -1,1 +1,0 @@
-"""Data models for Clarity Agent."""

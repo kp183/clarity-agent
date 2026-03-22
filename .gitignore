@@ -1,10 +1,56 @@
-# Python virtual environment and cache files
-venv/
-__pycache__/
-clarity_agent.egg-info/
-
-# Kiro IDE files
-.kiro/
-
-# Environment variables (if you create one)
+# ── Secrets ──────────────────────────────────────────────────────────────────
 .env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ── Python ───────────────────────────────────────────────────────────────────
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.so
+
+# ── Test / coverage ──────────────────────────────────────────────────────────
+.pytest_cache/
+.hypothesis/
+.coverage
+htmlcov/
+coverage.xml
+*.coveragerc
+
+# ── Next.js / Node ───────────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.kiro/
+*.swp
+*.swo
+*~
+
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Runtime / build artifacts ────────────────────────────────────────────────
+*.db
+*.sqlite
+clarity.db
+
+# Runtime logs (but not demo data)
+logs/
+*.log.bak

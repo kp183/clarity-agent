@@ -1,0 +1,1 @@
+{"name": "Deployment Regression", "description": "New deployment introduces NullPointerException causing endpoint failures", "severity": "high", "events_count": 60, "services": ["user-service", "api-gateway"], "root_cause": "v2.3.1 introduced null reference bug in UserController.getProfile", "remediation": "kubectl rollout undo deployment/user-service"}

@@ -1,0 +1,77 @@
+2025-02-08T14:31:45Z INFO api-gateway: Request received GET /api/users
+2025-02-08T14:31:46Z INFO api-gateway: Request received POST /api/auth/login
+2025-02-08T14:31:47Z INFO auth-service: Authentication successful user_id=1042
+2025-02-08T14:31:48Z INFO api-gateway: Request received GET /api/products
+2025-02-08T14:31:49Z INFO database: Query executed SELECT * FROM users WHERE id=1042 duration=2ms
+2025-02-08T14:31:50Z INFO api-gateway: Request received GET /api/orders
+2025-02-08T14:31:51Z INFO auth-service: Token validated user_id=2031
+2025-02-08T14:31:52Z INFO database: Connection pool status: 12/50 connections active
+2025-02-08T14:31:53Z INFO api-gateway: Request received POST /api/checkout
+2025-02-08T14:31:54Z INFO auth-service: Authentication successful user_id=3087
+2025-02-08T14:31:55Z INFO database: Query executed INSERT INTO orders duration=4ms
+2025-02-08T14:31:56Z INFO api-gateway: Request received GET /api/users/profile
+2025-02-08T14:31:57Z INFO auth-service: Token validated user_id=4102
+2025-02-08T14:31:58Z INFO database: Connection pool status: 15/50 connections active
+2025-02-08T14:31:59Z INFO api-gateway: Request received GET /api/inventory
+2025-02-08T14:32:00Z INFO api-gateway: Request received GET /api/users
+2025-02-08T14:32:01Z INFO auth-service: Authentication successful user_id=5201
+2025-02-08T14:32:02Z INFO database: Query executed SELECT * FROM inventory duration=3ms
+2025-02-08T14:32:03Z INFO api-gateway: Request received POST /api/auth/login
+2025-02-08T14:32:04Z INFO api-gateway: Request received GET /api/products
+2025-02-08T14:32:05Z INFO database: Connection pool status: 18/50 connections active
+2025-02-08T14:32:06Z INFO auth-service: Token validated user_id=6310
+2025-02-08T14:32:07Z INFO api-gateway: Request received GET /api/orders req_rate=120/s
+2025-02-08T14:32:08Z WARN api-gateway: Traffic spike detected req_rate=420/s (was 120/s)
+2025-02-08T14:32:09Z WARN api-gateway: Request queue depth increasing queue=45
+2025-02-08T14:32:10Z INFO database: Connection pool status: 28/50 connections active
+2025-02-08T14:32:11Z WARN api-gateway: High request volume req_rate=415/s
+2025-02-08T14:32:12Z INFO auth-service: Processing 38 concurrent authentication requests
+2025-02-08T14:32:13Z WARN database: Connection pool utilization high: 35/50 connections active
+2025-02-08T14:32:14Z WARN api-gateway: Latency increasing p99=850ms (threshold=500ms)
+2025-02-08T14:32:15Z WARN auth-service: Database response time degraded avg=320ms
+2025-02-08T14:32:16Z WARN database: Connection pool utilization critical: 42/50 connections active
+2025-02-08T14:32:17Z WARN api-gateway: Request queue depth queue=120
+2025-02-08T14:32:18Z WARN auth-service: Slow query detected SELECT * FROM sessions duration=1200ms
+2025-02-08T14:32:19Z WARN database: Connection pool near limit: 46/50 connections active
+2025-02-08T14:32:20Z WARN api-gateway: Downstream latency degraded auth-service p99=1800ms
+2025-02-08T14:32:21Z WARN auth-service: Connection acquisition time elevated wait=2100ms
+2025-02-08T14:32:22Z WARN database: Connection pool near exhaustion: 48/50 connections active
+2025-02-08T14:32:23Z WARN api-gateway: Circuit breaker threshold approaching auth-service failures=8%
+2025-02-08T14:32:24Z WARN auth-service: pool 48/50 — approaching connection limit
+2025-02-08T14:32:25Z WARN database: Connection pool at limit: 50/50 connections active — new requests queuing
+2025-02-08T14:32:26Z WARN auth-service: Connection wait queue depth: 24 requests waiting
+2025-02-08T14:32:27Z WARN api-gateway: Elevated error rate auth-service errors=12%
+2025-02-08T14:32:28Z WARN auth-service: pool 48/50 — WARNING: connection pool nearly exhausted
+2025-02-08T14:32:29Z ERROR database: Cannot acquire connection — pool exhausted (50/50 active)
+2025-02-08T14:32:30Z ERROR auth-service: Failed to acquire DB connection after 5000ms wait
+2025-02-08T14:32:45Z ERROR database: remaining connection slots are reserved for non-replication superuser connections
+2025-02-08T14:32:50Z ERROR auth-service: ConnectionTimeout: failed to acquire connection from pool after 10000ms
+2025-02-08T14:32:55Z ERROR api-gateway: Upstream error auth-service returned 503 Service Unavailable
+2025-02-08T14:33:01Z ERROR database: remaining connection slots reserved for superuser — rejecting new connections
+2025-02-08T14:33:02Z ERROR auth-service: FATAL: connection pool exhausted, all 50 slots occupied
+2025-02-08T14:33:05Z ERROR api-gateway: Service degraded: auth-service error_rate=67%
+2025-02-08T14:33:10Z ERROR auth-service: ConnectionTimeout after 30.0s — request dropped
+2025-02-08T14:33:11Z ERROR api-gateway: Service unavailable: auth-service returned 503
+2025-02-08T14:33:12Z ERROR auth-service: ConnectionTimeout after 30.0s — request dropped
+2025-02-08T14:33:13Z ERROR api-gateway: Service unavailable: auth-service returned 503
+2025-02-08T14:33:14Z ERROR auth-service: ConnectionTimeout after 30.0s — request dropped
+2025-02-08T14:33:15Z ERROR auth-service: ConnectionTimeout after 30.0s — cascading failure detected
+2025-02-08T14:33:16Z ERROR api-gateway: Circuit breaker OPEN for auth-service — failing fast
+2025-02-08T14:33:20Z ERROR api-gateway: 100% of /api/auth requests failing — circuit breaker open
+2025-02-08T14:33:25Z ERROR auth-service: Health check failed — service unresponsive
+2025-02-08T14:33:30Z ERROR api-gateway: Downstream dependency auth-service UNAVAILABLE
+2025-02-08T14:33:35Z ERROR database: Max connections exceeded — refusing all new connections
+2025-02-08T14:33:40Z ERROR auth-service: Service entering degraded state — dropping requests
+2025-02-08T14:33:45Z ERROR api-gateway: SLA breach detected — p99 latency=32000ms
+2025-02-08T14:33:50Z ERROR auth-service: ConnectionTimeout after 30.0s — 47 requests dropped
+2025-02-08T14:33:55Z ERROR api-gateway: Service unavailable: auth-service returned 503
+2025-02-08T14:34:00Z ERROR auth-service: CRITICAL: service completely unresponsive
+2025-02-08T14:34:02Z ERROR api-gateway: Service unavailable: auth-service returned 503 — all replicas down
+2025-02-08T14:34:05Z ERROR api-gateway: Alerting on-call engineer — P1 incident declared
+2025-02-08T14:34:10Z WARN api-gateway: Attempting health check on auth-service replicas
+2025-02-08T14:34:15Z ERROR auth-service: Replica 1/3 health check FAILED
+2025-02-08T14:34:16Z ERROR auth-service: Replica 2/3 health check FAILED
+2025-02-08T14:34:17Z ERROR auth-service: Replica 3/3 health check FAILED
+2025-02-08T14:34:20Z ERROR api-gateway: All auth-service replicas unresponsive — incident escalated
+2025-02-08T14:34:25Z INFO api-gateway: Incident response initiated — on-call engineer paged
+2025-02-08T14:34:30Z INFO database: DBA notified — investigating connection pool exhaustion

@@ -1,0 +1,69 @@
+2025-02-08T09:00:12Z INFO payment-service: Service started — heap 245MB/512MB (48%)
+2025-02-08T09:00:15Z INFO payment-service: Payment processor initialized — ready to accept requests
+2025-02-08T09:05:22Z INFO payment-service: heap 248MB/512MB — processing 12 transactions/min
+2025-02-08T09:10:31Z INFO payment-service: heap 252MB/512MB — GC pause 45ms
+2025-02-08T09:15:44Z INFO payment-service: heap 258MB/512MB — processing 15 transactions/min
+2025-02-08T09:20:55Z INFO cache: Cache hit rate 94% — 1240 entries cached
+2025-02-08T09:25:03Z INFO payment-service: heap 265MB/512MB — GC pause 52ms
+2025-02-08T09:30:18Z INFO payment-service: heap 271MB/512MB — processing 14 transactions/min
+2025-02-08T09:35:27Z INFO cache: Cache eviction triggered — 120 entries removed
+2025-02-08T09:40:39Z INFO payment-service: heap 280MB/512MB — GC pause 61ms
+2025-02-08T09:45:51Z INFO payment-service: heap 289MB/512MB — processing 16 transactions/min
+2025-02-08T09:50:04Z INFO cache: Cache size growing — 2100 entries cached
+2025-02-08T09:55:17Z INFO payment-service: heap 299MB/512MB — GC pause 78ms
+2025-02-08T10:00:29Z WARN payment-service: heap 312MB/512MB — memory growth rate elevated (+13MB/5min)
+2025-02-08T10:05:41Z WARN payment-service: heap 328MB/512MB — GC pause 120ms
+2025-02-08T10:10:53Z WARN payment-service: heap 345MB/512MB — memory growth rate elevated (+17MB/5min)
+2025-02-08T10:11:02Z WARN cache: Cache memory usage high — 3800 entries, 180MB allocated
+2025-02-08T10:15:05Z WARN payment-service: heap 362MB/512MB — GC frequency increasing (every 45s)
+2025-02-08T10:16:14Z WARN payment-service: Possible memory leak detected — heap growth non-linear
+2025-02-08T10:20:18Z WARN payment-service: heap 380MB/512MB — GC pause 280ms
+2025-02-08T10:21:30Z WARN cache: Cache eviction failing — unable to free memory
+2025-02-08T10:22:45Z WARN payment-service: heap 391MB/512MB — transaction processing slowing
+2025-02-08T10:25:02Z WARN payment-service: heap 405MB/512MB — GC pause 520ms
+2025-02-08T10:26:15Z WARN payment-service: Payment processing latency elevated p99=3200ms
+2025-02-08T10:27:28Z WARN cache: Cache thrashing detected — hit rate dropped to 61%
+2025-02-08T10:28:41Z WARN payment-service: heap 418MB/512MB — GC pause 890ms
+2025-02-08T10:29:54Z WARN payment-service: GC overhead limit approaching — 18% CPU spent in GC
+2025-02-08T10:30:07Z WARN payment-service: heap 432MB/512MB — GC pause 1400ms
+2025-02-08T10:30:20Z WARN payment-service: GC pause 1800ms — service responsiveness degraded
+2025-02-08T10:31:33Z WARN payment-service: heap 445MB/512MB — GC pause 2100ms
+2025-02-08T10:32:46Z WARN payment-service: GC pause 2.3s, heap 480MB/512MB — CRITICAL threshold
+2025-02-08T10:33:00Z WARN cache: Cache completely unresponsive — GC holding all locks
+2025-02-08T10:33:15Z WARN payment-service: heap 491MB/512MB — GC pause 2.8s — near OOM
+2025-02-08T10:33:30Z WARN payment-service: heap 498MB/512MB — GC pause 3.1s — imminent OOM
+2025-02-08T10:33:45Z WARN payment-service: heap 503MB/512MB — GC pause 3.4s — OOM imminent
+2025-02-08T10:34:00Z ERROR payment-service: GC overhead limit exceeded — 98% CPU in garbage collection
+2025-02-08T10:34:05Z ERROR payment-service: OutOfMemoryError: Java heap space
+2025-02-08T10:34:06Z ERROR payment-service: Thread[payment-processor-1] terminated: OutOfMemoryError
+2025-02-08T10:34:07Z ERROR payment-service: Thread[payment-processor-2] terminated: OutOfMemoryError
+2025-02-08T10:34:08Z ERROR payment-service: Thread[payment-processor-3] terminated: OutOfMemoryError
+2025-02-08T10:34:09Z ERROR payment-service: All payment processor threads terminated
+2025-02-08T10:34:10Z ERROR cache: Connection to payment-service lost — OutOfMemoryError
+2025-02-08T10:34:11Z ERROR payment-service: Health check endpoint unresponsive — OOM condition
+2025-02-08T10:34:12Z ERROR payment-service: Kubernetes liveness probe FAILED (attempt 1/3)
+2025-02-08T10:34:22Z ERROR payment-service: Kubernetes liveness probe FAILED (attempt 2/3)
+2025-02-08T10:34:32Z ERROR payment-service: Kubernetes liveness probe FAILED (attempt 3/3)
+2025-02-08T10:34:33Z INFO payment-service: Kubernetes killing container — liveness probe failed
+2025-02-08T10:34:34Z INFO payment-service: Container terminated by OOM killer
+2025-02-08T10:34:35Z INFO payment-service: Service restarting... (restart count: 1)
+2025-02-08T10:34:45Z INFO payment-service: Container starting — heap 0MB/512MB
+2025-02-08T10:34:50Z INFO payment-service: Service started — heap 245MB/512MB (48%)
+2025-02-08T10:34:55Z INFO payment-service: Payment processor initialized — ready to accept requests
+2025-02-08T10:35:00Z INFO cache: Reconnected to payment-service
+2025-02-08T10:35:05Z INFO payment-service: heap 248MB/512MB — processing resumed
+2025-02-08T10:40:12Z INFO payment-service: heap 255MB/512MB — GC pause 48ms
+2025-02-08T10:45:24Z INFO payment-service: heap 263MB/512MB — processing 13 transactions/min
+2025-02-08T10:50:36Z WARN payment-service: heap 278MB/512MB — memory growth rate elevated again
+2025-02-08T10:55:48Z WARN payment-service: heap 295MB/512MB — leak pattern recurring
+2025-02-08T11:00:01Z WARN payment-service: heap 315MB/512MB — GC pause 145ms
+2025-02-08T11:05:13Z WARN payment-service: heap 338MB/512MB — memory leak confirmed recurring
+2025-02-08T11:10:25Z WARN payment-service: heap 362MB/512MB — GC pause 340ms
+2025-02-08T11:15:37Z WARN payment-service: heap 389MB/512MB — GC pause 680ms
+2025-02-08T11:20:49Z WARN payment-service: heap 418MB/512MB — GC pause 1200ms
+2025-02-08T11:25:01Z WARN payment-service: heap 449MB/512MB — GC pause 1900ms
+2025-02-08T11:30:13Z WARN payment-service: heap 478MB/512MB — GC pause 2.5s
+2025-02-08T11:35:25Z ERROR payment-service: OutOfMemoryError: Java heap space — second occurrence
+2025-02-08T11:35:26Z ERROR payment-service: Service restarting... (restart count: 2)
+2025-02-08T11:35:30Z WARN payment-service: CrashLoopBackOff detected — Kubernetes throttling restarts
+2025-02-08T11:35:35Z INFO payment-service: Alerting on-call engineer — memory leak in payment processing loop
