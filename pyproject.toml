@@ -23,8 +23,8 @@ dependencies = [
     "pandas>=2.0.0",
     "python-jose[cryptography]>=3.3.0",
     "psutil>=5.9.0",
-    "alembic>=1.13.0",
     "slowapi>=0.1.9",
+    "groq>=0.4.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -32,11 +32,6 @@ where = ["."]
 include = ["clarity*"]
 
 [project.optional-dependencies]
-context = [
-    "tree-sitter>=0.21.0",
-    "tree-sitter-languages>=1.10.0",
-    "sentence-transformers>=2.2.0",
-]
 dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
