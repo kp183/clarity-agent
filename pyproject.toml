@@ -25,6 +25,7 @@ dependencies = [
     "psutil>=5.9.0",
     "slowapi>=0.1.9",
     "groq>=0.4.0",
+    "python-multipart>=0.0.9",
 ]
 
 [tool.setuptools.packages.find]
