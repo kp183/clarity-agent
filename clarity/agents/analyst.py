@@ -6,7 +6,6 @@ Orchestrates the full RCA pipeline: parse logs → build timeline → AI analysi
 """
 
 import asyncio
-import httpx
 import json
 import re
 import time
@@ -104,35 +103,41 @@ class AnalystAgent(BaseAgent):
         logger.info("Analysis pipeline completed.", elapsed_ms=elapsed_ms)
         return self._format_report(analysis_text, remediation_command)
 
-    # ─── MCP Remediation ─────────────────────────
+    # ─── Inline Remediation ──────────────────────
 
     async def _get_remediation_command(self, analysis_json: str) -> str:
-        """Call MCP server to get the appropriate remediation command."""
-        mcp_url = f"http://{settings.mcp_server_host}:{settings.mcp_server_port}"
-        service = self._extract_service(analysis_json)
-
-        # Intelligent tool selection based on analysis content
-        lower = analysis_json.lower()
-        if "exhausted" in lower or "pool" in lower or "memory" in lower:
-            endpoint = "/tools/restart"
-            logger.info("Decision: resource exhaustion → restart tool.")
-        else:
-            endpoint = "/tools/rollback"
-            logger.info("Decision: deployment/config issue → rollback tool.")
-
-        payload = {"service_name": service, "namespace": "default"}
-
+        """Generate kubectl remediation command inline (no MCP server needed)."""
         try:
-            async with httpx.AsyncClient() as client:
-                resp = await client.post(f"{mcp_url}{endpoint}", json=payload, timeout=10.0)
-                resp.raise_for_status()
-                return resp.json().get("command", f"Unexpected MCP response: {resp.json()}")
-        except httpx.RequestError as e:
-            logger.error("MCP server unreachable", error=str(e))
-            return "Error: Could not connect to MCP server. Is it running?"
-        except httpx.HTTPStatusError as e:
-            logger.error("MCP HTTP error", status_code=e.response.status_code)
-            return f"Error: MCP server returned {e.response.status_code}"
+            import json as _json
+            match = re.search(r'\{.*\}', analysis_json, re.DOTALL)
+            parsed = _json.loads(match.group(0)) if match else {}
+        except Exception:
+            parsed = {}
+
+        root_cause = parsed.get("root_cause_description", analysis_json).lower()
+        affected = parsed.get("affected_components", [])
+
+        # Determine primary service
+        service = affected[0] if affected else self._extract_service(analysis_json)
+        # Strip any trailing tags like "[CRITICAL]"
+        service = service.split("[")[0].strip()
+
+        if any(w in root_cause for w in ["regression", "bug", "error in version", "deployed", "release", "null", "nullpointer"]):
+            action = "undo"
+        elif any(w in root_cause for w in ["memory leak", "oom", "out of memory", "heap", "crashloop"]):
+            action = "restart"
+        elif any(w in root_cause for w in ["connection pool", "exhausted", "pool", "timeout", "overload"]):
+            action = "restart"
+        else:
+            action = "restart"
+
+        if action == "undo":
+            command = f"kubectl rollout undo deployment/{service} -n default"
+        else:
+            command = f"kubectl rollout restart deployment/{service} -n default"
+
+        logger.info("Generated remediation command inline", command=command)
+        return command
 
     # ─── Prompt Engineering ──────────────────────
 
