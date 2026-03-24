@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/github/stars/kp183/clarity-agent?style=for-the-badge" alt="GitHub Stars"/>
   <img src="https://img.shields.io/badge/Free_Analyses-100-blue?style=for-the-badge" alt="100 Free Analyses"/>
   <img src="https://img.shields.io/badge/MTTR_Reduction-95%25-success?style=for-the-badge" alt="95% MTTR Reduction"/>
+  <a href="https://www.producthunt.com/products/clarity-30?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-clarity-afb8ff6f-c0a8-432d-bd26-391b3468fee6" target="_blank" rel="noopener noreferrer"><img alt="Clarity - AI analyzes production incidents in 5 seconds | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1105061&amp;theme=light&amp;t=1774316984841"></a>
 </p>
 
 <p align="center">
