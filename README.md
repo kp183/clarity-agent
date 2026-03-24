@@ -14,7 +14,7 @@
   <a href="https://clarity-jade-five.vercel.app">🚀 Try Live Demo</a> •
   <a href="#quick-start">📖 Quick Start</a> •
   <a href="https://github.com/kp183/clarity-agent/issues">🐛 Report Bug</a> •
-  <a href="channluniverse@gmail.com">💬 Contact</a>
+ 
 </p>
 
 ---
