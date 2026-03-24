@@ -263,11 +263,15 @@ Looking for a starting point? Check [good first issues](https://github.com/kp183
 
 Give us a ⭐ on GitHub if Clarity saved you time — it helps more engineers find the project.
 
-- 📧 **Email:** team@clarity.ai
+- 📧 **Email:** channluniverse@gmail.com
 - 🐛 **Bugs / Features:** [Open an issue](https://github.com/kp183/clarity-agent/issues/new) — we respond within 24 hours
 - 💬 **Discussions:** [GitHub Discussions](https://github.com/kp183/clarity-agent/discussions)
 
----
+---### **📝 Give Us Feedback**
+
+Your feedback shapes our roadmap. **Takes 2 minutes:**
+
+**[📋 Share Your Feedback] https://forms.gle/uo7bF2JwWuFxaxQP7
 
 ## 📣 Spread the Word
 
@@ -288,4 +292,4 @@ MIT — free to use, modify, and distribute.
 ## Contact
 
 - GitHub: [github.com/kp183/clarity-agent](https://github.com/kp183/clarity-agent)
-- Email: team@clarity.ai
+- Email: channluniverse@gmail.com
