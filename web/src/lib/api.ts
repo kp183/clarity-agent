@@ -1,6 +1,6 @@
 import type { DemoResponse, UploadResponse } from './types'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://clarity-agent.onrender.com'
 
 export async function analyzeDemo(scenario: string): Promise<DemoResponse> {
   const res = await fetch(`${API_BASE}/demo/analyze`, {
