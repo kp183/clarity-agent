@@ -236,7 +236,7 @@ pytest tests/ -v
 - SLA guarantees
 - Dedicated support
 
-**Vote on features:** [Roadmap Discussions](https://github.com/kp183/clarity-agent/discussions)
+**Vote on features:** [Roadmap Discussions](https://github.com/kp183/clarity-agent/discussions/1)
 
 ---
 
