@@ -198,31 +198,43 @@ pytest tests/ -v
 
 ## 🔮 Roadmap
 
-### ✅ Shipped (v1.0 — March 2025)
+**Our approach:** Ship fast. Listen to users. Build what they need.
+
+### **✅ Available Now (v1.0)**
 - ✅ Three AI Agents (Analyst, Sentinel, Co-Pilot)
 - ✅ Multi-format log parsing (JSON, CSV, plaintext, syslog)
 - ✅ Groq + AWS Bedrock LLM support
 - ✅ Web app with 100 free analyses
-- ✅ CLI tool for terminal workflows
+- ✅ CLI tool (pip install clarity-ai)
 - ✅ Professional ticket generation
-- ✅ 210 tests passing
+- ✅ PII auto-redaction
+- ✅ 210 passing tests
 
-### 🔄 In Progress (v1.1 — April 2025)
-- 🔄 Slack integration for instant alerts
-- 🔄 Jira ticket auto-creation
-- 🔄 Team dashboards (multi-user)
-- 🔄 Analysis history & search
+### **🎯 Next Priorities** *(Based on user feedback)*
 
-### 📅 Coming Soon (v2.0 — Q2 2025)
-- 📅 Continuous monitoring as a service
-- 📅 Custom alert thresholds
-- 📅 GitOps integration (auto-rollback on errors)
-- 📅 PagerDuty integration
+**Integrations:**
+- Slack notifications for incident alerts
+- Jira/Linear ticket auto-creation
+- PagerDuty integration
+- Webhook support for custom workflows
 
-### 🌟 Future (v3.0+)
-- Enterprise: SSO/SAML, on-premise deployment
-- Advanced: Predictive incident prevention
-- Integrations: DataDog, Splunk, New Relic connectors
+**Team Features:**
+- Analysis history & search
+- Multi-user dashboards
+- Team collaboration tools
+- Shared incident timeline
+
+**Monitoring:**
+- Continuous monitoring as a service
+- Custom alert thresholds
+- Anomaly detection improvements
+- Predictive incident prevention
+
+**Enterprise:**
+- SSO/SAML authentication
+- On-premise deployment
+- SLA guarantees
+- Dedicated support
 
 **Vote on features:** [Roadmap Discussions](https://github.com/kp183/clarity-agent/discussions)
 
