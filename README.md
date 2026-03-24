@@ -294,3 +294,4 @@ MIT — free to use, modify, and distribute.
 
 - GitHub: [github.com/kp183/clarity-agent](https://github.com/kp183/clarity-agent)
 - Email: channluniverse@gmail.com
+- Linkedin:https://www.linkedin.com/in/kunal-ghanchi-9269ab2a5/
