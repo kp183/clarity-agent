@@ -268,11 +268,11 @@ Give us a ⭐ on GitHub if Clarity saved you time — it helps more engineers fi
 - 🐛 **Bugs / Features:** [Open an issue](https://github.com/kp183/clarity-agent/issues/new) — we respond within 24 hours
 - 💬 **Discussions:** [GitHub Discussions](https://github.com/kp183/clarity-agent/discussions)
 
----### **📝 Give Us Feedback**
+### **📝 Give Us Feedback**
 
 Your feedback shapes our roadmap. **Takes 2 minutes:**
 
-**[📋 Share Your Feedback] https://forms.gle/uo7bF2JwWuFxaxQP7
+** 📋 Share Your Feedback ** https://forms.gle/uo7bF2JwWuFxaxQP7 
 
 ## 📣 Spread the Word
 
