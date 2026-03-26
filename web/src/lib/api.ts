@@ -1,7 +1,6 @@
 import type { DemoResponse, UploadResponse } from './types'
 
-// Hardcoded — Next.js bakes this in at build time
-// If NEXT_PUBLIC_API_URL env var is set in Vercel, it overrides this
+// v2 - force fresh build
 const API_BASE = 'https://clarity-agent.onrender.com'
 
 async function fetchWithRetry(url: string, options: RequestInit, retries = 2): Promise<Response> {
