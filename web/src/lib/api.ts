@@ -2,6 +2,9 @@ import type { DemoResponse, UploadResponse } from './types'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://clarity-agent.onrender.com'
 
+// Force cache bust for deployment
+const BUILD_ID = Date.now()
+
 async function fetchWithRetry(url: string, options: RequestInit, retries = 2): Promise<Response> {
   for (let i = 0; i <= retries; i++) {
     try {
