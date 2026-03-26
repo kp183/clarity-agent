@@ -1,22 +1,19 @@
 import type { DemoResponse, UploadResponse } from './types'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://clarity-agent.onrender.com'
-
-// Force cache bust for deployment
-const BUILD_ID = Date.now()
+// Hardcoded — Next.js bakes this in at build time
+// If NEXT_PUBLIC_API_URL env var is set in Vercel, it overrides this
+const API_BASE = 'https://clarity-agent.onrender.com'
 
 async function fetchWithRetry(url: string, options: RequestInit, retries = 2): Promise<Response> {
   for (let i = 0; i <= retries; i++) {
     try {
       const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 45000) // 45s timeout for cold starts
-      
+      const timeout = setTimeout(() => controller.abort(), 45000)
       const res = await fetch(url, { ...options, signal: controller.signal })
       clearTimeout(timeout)
       return res
     } catch (err) {
       if (i === retries) throw err
-      // Wait 2s before retry
       await new Promise(resolve => setTimeout(resolve, 2000))
     }
   }
