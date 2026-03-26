@@ -28,10 +28,6 @@ Clarity is a free, open-source AI tool that analyzes production logs, identifies
 
 ---
 
-## Quick Start
-
----
-
 ## 🌐 Try It Live
 
 **Don't want to install? Try the web version:**
@@ -46,7 +42,8 @@ Clarity is a free, open-source AI tool that analyzes production logs, identifies
 **Or install locally:**
 
 ```bash
-pip install clarity-ai
+git clone https://github.com/kp183/clarity-agent.git
+cd clarity-agent && pip install -e .
 clarity analyze logs/*.log
 ```
 
@@ -153,8 +150,120 @@ docker-compose up -d
 
 ## Architecture
 
+```mermaid
+graph TD
+  subgraph "User Interaction"
+    CLI[👨‍💻 Rich CLI Interface]
+    WEB[🌐 Next.js Web App]
+  end
+
+  subgraph "Clarity Core (Python)"
+    Analyst["🔍 Analyst Agent"]
+    Sentinel["🛡️ Sentinel Agent"]
+    CoPilot["🤖 Co-Pilot Agent"]
+    API["⚡ FastAPI REST API"]
+  end
+
+  subgraph "LLM Providers"
+    Groq["Groq (llama-3.3-70b)"]
+    Bedrock["AWS Bedrock (Titan/Claude)"]
+  end
+
+  CLI -- "analyze / monitor / ticket" --> Analyst
+  CLI -- "monitor" --> Sentinel
+  CLI -- "copilot" --> CoPilot
+  WEB -- "POST /demo/analyze" --> API
+  WEB -- "POST /analyze" --> API
+  API --> Analyst
+  Analyst -- "LLM prompt" --> Groq
+  Analyst -- "fallback" --> Bedrock
+  Groq -- "JSON analysis" --> Analyst
+  Analyst -- "inline kubectl" --> CLI
+  Analyst -- "hands off to" --> CoPilot
+  CoPilot -- "Q&A prompt" --> Groq
+  Sentinel -- "scan prompt" --> Groq
 ```
-clarity/
+
+---
+
+## 📖 Complete Usage Guide
+
+### Step 1 — Clone & Install
+
+```bash
+git clone https://github.com/kp183/clarity-agent.git
+cd clarity-agent
+
+# Create virtual environment
+python -m venv venv
+
+# Activate (macOS/Linux)
+source venv/bin/activate
+
+# Activate (Windows PowerShell)
+.\venv\Scripts\Activate.ps1
+
+# Install
+pip install -e .
+
+# Copy env and add your Groq API key (free at console.groq.com)
+cp .env.example .env
+```
+
+### Step 2 — Set your Groq API key in `.env`
+
+```bash
+LLM_PROVIDER=groq
+GROQ_API_KEY=your_key_here   # free at console.groq.com
+```
+
+### Step 3 — Run the commands
+
+**1. 🔍 Reactive Analysis + Interactive Co-Pilot**
+
+```bash
+clarity analyze logs/app_errors.log logs/deployment_logs.json
+```
+
+Parses logs → builds timeline → AI root cause analysis → kubectl remediation command.
+After the report, type `Y` to start chatting with the Co-Pilot.
+
+**2. 🛡️ Proactive Monitoring**
+
+```bash
+clarity monitor logs/app_errors.log
+```
+
+Scans every 30 seconds. Fires alerts before incidents escalate. Press `Ctrl+C` to stop.
+
+**3. 📋 Generate Incident Ticket**
+
+```bash
+clarity ticket logs/app_errors.log logs/deployment_logs.json
+```
+
+Generates a clean markdown incident report — paste into Jira, Slack, or email.
+
+**4. 📤 Notify Slack / Create Jira Ticket**
+
+```bash
+clarity notify logs/app_errors.log --slack --jira
+```
+
+**5. 📊 Export Full Report**
+
+```bash
+clarity export-report logs/app_errors.log --output report.md
+```
+
+**6. 🔧 Start API / MCP Server**
+
+```bash
+clarity start-api     # REST API on port 8000
+clarity start-mcp     # MCP remediation server on port 8001
+clarity version       # Show version
+clarity --help        # Help for any command
+```
 ├── agents/
 │   ├── analyst.py      # Reactive RCA — parse → timeline → LLM → remediation
 │   ├── sentinel.py     # Proactive monitoring — continuous scan + AI prediction
