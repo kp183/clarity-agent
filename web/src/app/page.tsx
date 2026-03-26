@@ -253,7 +253,7 @@ export default function Home() {
                   }`}
                   disabled={activeScenario === s.id && demoLoading}
                 >
-                  {activeScenario === s.id && demoLoading ? 'Analyzing...' : 'Run Analysis →'}
+                  {activeScenario === s.id && demoLoading ? 'Analyzing... (may take 30s if server is waking up)' : 'Run Analysis →'}
                 </button>
               </div>
             ))}
@@ -364,7 +364,7 @@ export default function Home() {
                   disabled={!pasteText.trim() || uploadLoading}
                   className="w-full py-3 rounded-lg bg-green-500 hover:bg-green-400 disabled:bg-gray-700 disabled:text-gray-500 text-black font-semibold transition-colors"
                 >
-                  {uploadLoading ? 'Analyzing...' : 'Analyze Pasted Logs'}
+                  {uploadLoading ? 'Analyzing... (may take 30s if server is waking up)' : 'Analyze Pasted Logs'}
                 </button>
               </div>
             </>
