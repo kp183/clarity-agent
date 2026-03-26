@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react'
 import AnalysisResults from '@/components/AnalysisResults'
 import { analyzeDemo, analyzeUpload, analyzePaste } from '@/lib/api'
+import { track } from '@/lib/posthog'
 import type { AnalysisResult, DemoResponse, UploadResponse } from '@/lib/types'
 
 const SCENARIOS = [
@@ -65,12 +66,18 @@ export default function Home() {
     setDemoError(null)
     setDemoAnalysis(null)
     setDemoRemediation(null)
+    track('demo_started', { scenario: scenarioId })
     try {
       const res: DemoResponse = await analyzeDemo(scenarioId)
       setDemoAnalysis(res.analysis)
       setDemoRemediation(res.remediation_command)
+      track('demo_completed', {
+        scenario: scenarioId,
+        confidence: res.analysis?.confidence_score,
+      })
     } catch (e: unknown) {
       setDemoError(e instanceof Error ? e.message : 'Demo analysis failed')
+      track('demo_failed', { scenario: scenarioId, error: String(e) })
     } finally {
       setDemoLoading(false)
     }
@@ -83,15 +90,21 @@ export default function Home() {
     setUploadError(null)
     setUploadAnalysis(null)
     setUploadRemediation(null)
+    track('file_upload_started', { file_count: files.length })
     try {
       const res: UploadResponse = await analyzeUpload(files)
       setUploadAnalysis(res.analysis)
       setUploadRemediation(res.remediation_command)
       setTrialRemaining(res.trial_remaining ?? Math.max(0, trialRemaining - 1))
+      track('file_upload_completed', { confidence: res.analysis?.confidence_score })
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Upload failed'
-      if (msg.includes('trial limit')) setTrialRemaining(0)
+      if (msg.includes('trial limit')) {
+        setTrialRemaining(0)
+        track('trial_limit_hit')
+      }
       setUploadError(msg)
+      track('file_upload_failed', { error: msg })
     } finally {
       setUploadLoading(false)
     }
@@ -454,6 +467,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 px-6 rounded text-center transition-colors"
+                onClick={() => track('github_clicked', { location: 'install_section' })}
               >
                 View on GitHub →
               </a>

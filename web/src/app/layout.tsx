@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
+import { PostHogProvider } from '@/lib/posthog'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}<Analytics /></body>
+      <body><PostHogProvider>{children}<Analytics /></PostHogProvider></body>
     </html>
   )
 }
