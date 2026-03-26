@@ -304,7 +304,8 @@ export default function Home() {
               <h3 className="text-white font-semibold text-xl mb-2">100 Free Analyses Used</h3>
               <p className="text-gray-400 text-sm mb-6">Want unlimited analysis? Install the CLI:</p>
               <div className="bg-gray-800 p-4 rounded font-mono text-sm mb-6 max-w-md mx-auto text-left">
-                <div className="text-green-400">pip install clarity-ai</div>
+                <div className="text-green-400">git clone https://github.com/kp183/clarity-agent.git</div>
+                <div className="text-green-400">cd clarity-agent && pip install -e .</div>
                 <div className="text-green-400">clarity analyze logs/*.log</div>
               </div>
               <a
@@ -434,8 +435,9 @@ export default function Home() {
               <h3 className="text-2xl font-bold mb-4 text-center text-white">Install CLI</h3>
               <div className="space-y-4 mb-6">
                 <div className="bg-gray-800 p-4 rounded font-mono text-sm">
-                  <div className="text-gray-400 mb-2"># Install</div>
-                  <div className="text-green-400">pip install clarity-ai</div>
+                  <div className="text-gray-400 mb-2"># Clone & install</div>
+                  <div className="text-green-400">git clone https://github.com/kp183/clarity-agent.git</div>
+                  <div className="text-green-400">cd clarity-agent && pip install -e .</div>
                 </div>
                 <div className="bg-gray-800 p-4 rounded font-mono text-sm">
                   <div className="text-gray-400 mb-2"># Analyze logs</div>

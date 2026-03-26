@@ -55,6 +55,10 @@ clarity analyze logs/*.log
 ## Quick Start
 
 ```bash
+# Clone the repo
+git clone https://github.com/kp183/clarity-agent.git
+cd clarity-agent
+
 # Install
 pip install -e .
 
